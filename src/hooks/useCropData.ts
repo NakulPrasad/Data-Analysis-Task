@@ -1,48 +1,43 @@
 import { useMemo } from "react";
 import CropData from "../utlls/CropData.json";
 
-interface IDataEntry {
-  Year: string;
-  "Crop Production (UOM:t(Tonnes))": string | null | undefined;
-  "Crop Name": string;
-  [key: string]: any; // For additional properties if necessary
-}
-
-interface ICropDataProps {
-  data: IDataEntry[];
-}
-
+// Custom hook to process crop data
 const useCropData = () => {
-  const data: IDataEntry[] = CropData;
+  // Normalize CropData: Convert year to a number and handle empty production values
   const normalizedData = useMemo(() => {
-    const normalizedDataTemp = data.map((entry) => ({
-      ...entry,
-      Year: parseInt(entry.Year.match(/\d{4}/)?.[0] || "0", 10), // Extract year as number
+    if (!CropData) throw new Error("Crop Data is empty");
+    const normalizedDataTemp = CropData.map((crop) => ({
+      ...crop,
+      Year: parseInt(crop.Year.match(/\d{4}/)?.[0] || "0", 10), // Extract year as a number
       "Crop Production (UOM:t(Tonnes))":
-        entry["Crop Production (UOM:t(Tonnes))"] === "" ||
-        entry["Crop Production (UOM:t(Tonnes))"] == null
+        crop["Crop Production (UOM:t(Tonnes))"] === "" ||
+        crop["Crop Production (UOM:t(Tonnes))"] == null
           ? 0
-          : +entry["Crop Production (UOM:t(Tonnes))"],
+          : +crop["Crop Production (UOM:t(Tonnes))"], // Default empty/null to 0
     }));
     return normalizedDataTemp;
-  }, [data]);
+  }, [CropData]);
 
+  // Group data by year and find crops with max/min production
   const yearGroups = useMemo(() => {
-    const yearGroupsTemp = normalizedData.reduce((acc, entry) => {
-      const year = entry.Year;
-      const production = entry["Crop Production (UOM:t(Tonnes))"];
+    if (normalizedData.length === 0) throw new Error("Normalized Data is empty");
+    const yearGroupsTemp = normalizedData.reduce((acc, current) => {
+      const year = current.Year;
+      const production = current["Crop Production (UOM:t(Tonnes))"];
 
+      // Initialize year group if it doesn't exist
       if (!acc[year]) {
         acc[year] = {
-          maxCrop: entry,
-          minCrop: entry,
+          maxCrop: current,
+          minCrop: current,
         };
       } else {
+        // Update max/min crop for the year
         if (production > acc[year].maxCrop["Crop Production (UOM:t(Tonnes))"]) {
-          acc[year].maxCrop = entry;
+          acc[year].maxCrop = current;
         }
         if (production < acc[year].minCrop["Crop Production (UOM:t(Tonnes))"]) {
-          acc[year].minCrop = entry;
+          acc[year].minCrop = current;
         }
       }
 
@@ -53,36 +48,42 @@ const useCropData = () => {
     return Object.entries(yearGroupsTemp).map(
       ([year, { maxCrop, minCrop }]) => ({
         Year: +year,
-        "Max Crop Name": maxCrop["Crop Name"],
-        "Max Production (t)": maxCrop["Crop Production (UOM:t(Tonnes))"],
-        "Min Crop Name": minCrop["Crop Name"],
-        "Min Production (t)": minCrop["Crop Production (UOM:t(Tonnes))"],
+        "Max Crop Name": maxCrop["Crop Name"], // Crop with max production
+        "Min Crop Name": minCrop["Crop Name"], // Crop with min production
       })
     );
   }, [normalizedData]);
 
+  // Aggregate data for bar chart: Calculate average yield per crop
   const barChartData = useMemo(() => {
     if (normalizedData.length === 0) return [];
-    const cropGroups = normalizedData.reduce((acc, entry) => {
-      const cropName = entry["Crop Name"];
-      const production = entry["Crop Production (UOM:t(Tonnes))"];
+    const cropGroups = normalizedData.reduce(
+      (acc, current) => {
+        const cropName = current["Crop Name"];
+        const production = current["Crop Production (UOM:t(Tonnes))"];
 
-      if (!acc[cropName]) {
-        acc[cropName] = { totalYield: 0, count: 0 };
-      }
+        // Initialize crop group if it doesn't exist
+        if (!acc[cropName]) {
+          acc[cropName] = { totalYield: 0, count: 0 };
+        }
 
-      acc[cropName].totalYield += production;
-      acc[cropName].count += 1;
+        // Accumulate total yield and count
+        acc[cropName].totalYield += production;
+        acc[cropName].count += 1;
 
-      return acc;
-    }, {} as Record<string, { totalYield: number; count: number }>);
+        return acc;
+      },
+      {} as Record<string, { totalYield: number; count: number }>
+    );
 
-    return Object.entries(cropGroups).map(([cropName, { totalYield, count }]) => ({
-      cropName,
-      averageYield: totalYield / count,
-    }));
+    // Calculate average yield for each crop
+    return Object.entries(cropGroups).map(
+      ([cropName, { totalYield, count }]) => ({
+        cropName,
+        averageYield: totalYield / count,
+      })
+    );
   }, [normalizedData]);
-  
 
   return { yearGroups, normalizedData, barChartData };
 };

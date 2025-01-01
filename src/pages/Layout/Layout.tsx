@@ -6,7 +6,7 @@ import classes from './Layout.module.css'
 export interface IRootProps {
 }
 
-export default function Layout (props: IRootProps) {
+export default function Layout () {
   return (
     <Box className={classes.layout}>
       <Header/>

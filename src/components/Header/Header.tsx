@@ -1,13 +1,13 @@
-import { Box, Container, Title } from '@mantine/core';
-import * as React from 'react';
+import { Container, Flex, Title } from "@mantine/core";
 
-export interface IHeaderProps {
-}
+export interface IHeaderProps {}
 
-export default function Header (props: IHeaderProps) {
+export default function Header() {
   return (
     <Container>
-      <Title order={1}>Data Analysis Task</Title>
+      <Flex>
+        <Title order={2}>Data Analysis</Title>
+      </Flex>
     </Container>
   );
 }

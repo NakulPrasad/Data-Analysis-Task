@@ -1,4 +1,14 @@
-import { Container, createTheme, MantineColorsTuple, MantineTheme, MantineThemeComponent, MantineThemeComponents, rem } from "@mantine/core";
+/**
+ * @description contains the config for mantine theme
+ */
+
+import {
+  createTheme,
+  MantineColorsTuple,
+  MantineTheme,
+  rem,
+} from "@mantine/core";
+import "./fonts/ProximaNova.css";
 
 const orangeShades: MantineColorsTuple = [
   "#fff0e4",
@@ -26,28 +36,8 @@ const whiteShades: MantineColorsTuple = [
   "#575757",
 ];
 
-// export const CONTAINER_WIDTHS: Record<string, string> = {
-//   xxs: rem(300),
-//   xs: rem(400),
-//   sm: rem(500),
-//   md: rem(600),
-//   lg: rem(700),
-//   xl: rem(800),
-//   xxl: rem(900),
-// };
-
-// export const CONTAINER_HEIGHTS: Record<string, string> = {
-//   xxs: rem(200),
-//   xs: rem(300),
-//   sm: rem(400),
-//   md: rem(500),
-//   lg: rem(600),
-//   xl: rem(700),
-//   xxl: rem(800),
-// };
-
 export const theme = createTheme({
-  fontFamily: "Open Sans, sans-serif",
+  fontFamily: "ProximaNova, Arial, sans-serif",
   colors: {
     orange: orangeShades,
     white: whiteShades,
@@ -55,7 +45,6 @@ export const theme = createTheme({
   primaryColor: "orange",
   primaryShade: { light: 6, dark: 4 },
   headings: {
-    fontFamily: "Open Sans",
     fontWeight: rem(600),
     sizes: {
       h1: {
@@ -130,11 +119,11 @@ export const theme = createTheme({
   defaultRadius: "md",
   components: {
     Container: {
-      styles: (theme : MantineTheme) => ({
+      styles: (theme: MantineTheme) => ({
         root: {
           maxWidth: theme.other.containerWidths.xxl,
-          maxHeight : theme.other.containerHeights.xxl,
-          overflow: 'auto', // Default size for largest screens
+          maxHeight: theme.other.containerHeights.xxl,
+          overflow: "auto", // Default size for largest screens
           padding: rem(16),
         },
       }),
@@ -179,6 +168,6 @@ export const theme = createTheme({
       lg: rem(700),
       xl: rem(800),
       xxl: rem(900),
-    }
+    },
   },
 });

@@ -1,6 +1,6 @@
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
-import { theme } from "./theme";
+import { theme } from "./theme/theme";
 import Home from "./pages/Home/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./pages/Error/ErrorPage";

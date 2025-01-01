@@ -13,29 +13,27 @@ import useCropData from "../../hooks/useCropData";
 
 export interface ICustomBarChartProps {}
 
-export default function CustomBarChart(props: ICustomBarChartProps) {
+export default function CustomBarChart() {
   const chartRef = useRef<HTMLDivElement>(null);
-  const {barChartData} = useCropData();
+  const { barChartData } = useCropData();
+
   useEffect(() => {
     if (!chartRef.current) return;
 
     // Initialize ECharts instance
     const chartInstance = echarts.init(chartRef.current);
 
-
-    // Extract x-axis labels and y-axis data from barChartData
+    // Prepare data for x-axis and series
     const xAxisData = barChartData.map((item) => item.cropName);
     const seriesData = barChartData.map((item) => item.averageYield);
 
-    // Configure chart options
+    // Define chart configuration options
     const option: echarts.ComposeOption<
       TooltipComponentOption | GridComponentOption | BarSeriesOption
     > = {
       tooltip: {
         trigger: "axis",
-        axisPointer: {
-          type: "shadow",
-        },
+        axisPointer: { type: "shadow" },
       },
       grid: {
         left: "3%",
@@ -46,19 +44,17 @@ export default function CustomBarChart(props: ICustomBarChartProps) {
       xAxis: [
         {
           type: "category",
-          data: xAxisData || ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-          axisTick: {
-            alignWithLabel: true,
-          },
+          data: xAxisData || ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], // Fallback data
+          axisTick: { alignWithLabel: true },
           axisLabel: {
-            rotate: 45, // Rotate labels 45 degrees
+            rotate: 45, // Rotate labels for readability
             interval: 0, // Show all labels
           },
         },
       ],
       yAxis: [
         {
-          type: "log",
+          type: "log", // Logarithmic scale for better data distribution
           name: "Average Yield",
         },
       ],
@@ -67,12 +63,12 @@ export default function CustomBarChart(props: ICustomBarChartProps) {
           name: "Average Yield",
           type: "bar",
           barWidth: "60%",
-          data: seriesData || [10, 52, 200, 334, 390, 330, 220],
+          data: seriesData || [10, 52, 200, 334, 390, 330, 220], // Fallback data
         },
       ],
     };
 
-    // Set the chart options
+    // Apply options to the chart
     chartInstance.setOption(option);
 
     // Cleanup on unmount
@@ -81,7 +77,7 @@ export default function CustomBarChart(props: ICustomBarChartProps) {
     };
   }, [barChartData]);
 
-  // Register ECharts components
+  // Register required ECharts components
   echarts.use([TooltipComponent, GridComponent, BarChart, CanvasRenderer]);
 
   return (

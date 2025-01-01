@@ -4,11 +4,11 @@ import CustomBarChart from '../../components/BarChart/CustomBarChart';
 export interface IHomeProps {
 }
 
-export default function Home (props: IHomeProps) {
+export default function Home () {
   return (
-    <div>
+    <>
       <CustomTable/>
       <CustomBarChart/>
-    </div>
+    </>
   );
 }
