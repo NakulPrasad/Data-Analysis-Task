@@ -1,4 +1,4 @@
-import { createTheme, MantineColorsTuple, rem } from "@mantine/core";
+import { Container, createTheme, MantineColorsTuple, MantineTheme, MantineThemeComponent, MantineThemeComponents, rem } from "@mantine/core";
 
 const orangeShades: MantineColorsTuple = [
   "#fff0e4",
@@ -26,6 +26,26 @@ const whiteShades: MantineColorsTuple = [
   "#575757",
 ];
 
+// export const CONTAINER_WIDTHS: Record<string, string> = {
+//   xxs: rem(300),
+//   xs: rem(400),
+//   sm: rem(500),
+//   md: rem(600),
+//   lg: rem(700),
+//   xl: rem(800),
+//   xxl: rem(900),
+// };
+
+// export const CONTAINER_HEIGHTS: Record<string, string> = {
+//   xxs: rem(200),
+//   xs: rem(300),
+//   sm: rem(400),
+//   md: rem(500),
+//   lg: rem(600),
+//   xl: rem(700),
+//   xxl: rem(800),
+// };
+
 export const theme = createTheme({
   fontFamily: "Open Sans, sans-serif",
   colors: {
@@ -36,36 +56,36 @@ export const theme = createTheme({
   primaryShade: { light: 6, dark: 4 },
   headings: {
     fontFamily: "Open Sans",
-    fontWeight: "600",
+    fontWeight: rem(600),
     sizes: {
       h1: {
         fontSize: rem(48),
-        fontWeight: '700',
+        fontWeight: "700",
         lineHeight: "1.3",
       },
       h2: {
         fontSize: rem(40),
-        fontWeight: '700',
+        fontWeight: "700",
         lineHeight: "1.35",
       },
       h3: {
         fontSize: rem(32),
-        fontWeight: '600',
+        fontWeight: "600",
         lineHeight: "1.4",
       },
       h4: {
         fontSize: rem(24),
-        fontWeight: '600',
+        fontWeight: "600",
         lineHeight: "1.45",
       },
       h5: {
         fontSize: rem(20),
-        fontWeight: '600',
+        fontWeight: "600",
         lineHeight: "1.5",
       },
       h6: {
         fontSize: rem(18),
-        fontWeight: '600',
+        fontWeight: "600",
         lineHeight: "1.6",
       },
     },
@@ -92,11 +112,11 @@ export const theme = createTheme({
     xl: rem(32),
   },
   breakpoints: {
-    xs: '480',
-    sm: '768',
-    md: '1024',
-    lg: '1280',
-    xl: '1440',
+    xs: "480",
+    sm: "768",
+    md: "1024",
+    lg: "1280",
+    xl: "1440",
   },
   shadows: {
     xs: "0 1px 3px rgba(0, 0, 0, 0.1)",
@@ -109,8 +129,18 @@ export const theme = createTheme({
   cursorType: "pointer",
   defaultRadius: "md",
   components: {
+    Container: {
+      styles: (theme : MantineTheme) => ({
+        root: {
+          maxWidth: theme.other.containerWidths.xxl,
+          maxHeight : theme.other.containerHeights.xxl,
+          overflow: 'auto', // Default size for largest screens
+          padding: rem(16),
+        },
+      }),
+    },
     Button: {
-      styles: (theme : any) => ({
+      styles: (theme: any) => ({
         root: {
           fontWeight: 600,
           textTransform: "uppercase",
@@ -132,5 +162,23 @@ export const theme = createTheme({
       bold: 700,
       extraBold: 900,
     },
+    containerHeights: {
+      xxs: rem(200),
+      xs: rem(300),
+      sm: rem(400),
+      md: rem(500),
+      lg: rem(600),
+      xl: rem(700),
+      xxl: rem(800),
+    },
+    containerWidths: {
+      xxs: rem(300),
+      xs: rem(400),
+      sm: rem(500),
+      md: rem(600),
+      lg: rem(700),
+      xl: rem(800),
+      xxl: rem(900),
+    }
   },
 });
